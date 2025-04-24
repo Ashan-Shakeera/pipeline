@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Helper - Professional Productivity Suite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="logo-container">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>DailyHelper</span>
+      </div>
+      <div class="sidebar-toggle">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+    </div>
+    
+    <div class="nav-scroll-container">
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link active">
+            <div class="nav-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <span class="nav-text">Dashboard</span>
+            <div class="nav-indicator"></div>
+          </a>
+        </li>
+        
+        <li class="nav-item has-submenu">
+          <a href="fixed-deposit.html" class="nav-link">
+            <div class="nav-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <span class="nav-text">Finance Tools</span>
+            <i class="fas fa-chevron-down submenu-toggle"></i>
+          </a>
+          <ul class="sub-menu">
+            <li class="sub-item">
+              <a href="currency.html" class="sub-link">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Currency Converter</span>
+              </a>
+            </li>
+            <li class="sub-item">
+              <a href="fixed-deposit.html" class="sub-link">
+                <i class="fas fa-piggy-bank"></i>
+                <span>Fixed Deposit</span>
+              </a>
+            </li>
+            <li class="nav-item">
+          <a href="text-counter.html" class="nav-link">
+            <div class="nav-icon">
+              <i class="fas fa-text-width"></i>
+            </div>
+            <span class="nav-text">Text Counter</span>
+          </a>
+        </li>
+          </ul>
+        </li>
+        
+        <!-- Other menu items with same structure -->
+        
+      </ul>
+      
+      <div class="sidebar-footer">
+        
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="left-section">
+        <div class="breadcrumb">
+          <span>Dashboard</span>
+        </div>
+      </div>
+      
+      <div class="right-section">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search tools, features...">
+          <div class="search-results"></div>
+        </div>
+        
+        <div class="notifications">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          <div class="notification-dropdown">
+            <div class="notification-header">
+              <h4>Notifications</h4>
+              <a href="#" class="mark-all-read">Mark all as read</a>
+            </div>
+            <div class="notification-list">
+              <!-- Notifications would go here -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="theme-switch">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-switcher">
+            <span class="slider round"></span>
+            <span class="theme-icon dark"><i class="fas fa-moon"></i></span>
+            <span class="theme-icon light"><i class="fas fa-sun"></i></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <div class="tool-section currency-converter">
+  <div class="tool-header">
+    <h2><i class="fas fa-exchange-alt"></i> Currency Converter</h2>
+    <p class="subtext">Convert between major world currencies with real-time exchange rates.</p>
+  </div>
+
+  <div class="converter-form">
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input type="number" id="amount" placeholder="Enter amount" required>
+    </div>
+
+    <div class="form-group">
+      <label for="from">From</label>
+      <select id="from">
+        <option value="USD">USD - United States Dollar</option>
+        <option value="LKR">LKR - Sri Lankan Rupee</option>
+        <option value="INR">INR - Indian Rupee</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="GBP">GBP - British Pound</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="to">To</label>
+      <select id="to">
+        <option value="USD">USD - United States Dollar</option>
+        <option value="LKR">LKR - Sri Lankan Rupee</option>
+        <option value="INR">INR - Indian Rupee</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="GBP">GBP - British Pound</option>
+      </select>
+    </div>
+
+    <button class="convert-btn" onclick="convert()">
+      <i class="fas fa-calculator"></i> Convert
+    </button>
+
+    <div class="conversion-result" id="result"></div>
+  </div>
+
+  <div class="back-home">
+    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+  </div>
+</div>
+
+
+  <script>
+    async function convert() {
+      const amount = document.getElementById('amount').value;
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+
+      if (from === to) {
+        document.getElementById('result').innerText = "Please choose different currencies.";
+        return;
+      }
+
+      const url = `https://api.exchangerate-api.com/v4/latest/${from}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const rate = data.rates[to];
+        const result = amount * rate;
+
+        document.getElementById('result').innerText = `${amount} ${from} = ${result.toFixed(2)} ${to}`;
+      } catch (error) {
+        document.getElementById('result').innerText = "Error fetching exchange rate.";
+        console.error(error);
+      }
+    }
+  </script>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

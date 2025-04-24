@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Counter | Daily Helper</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style2.css">
+  
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <i class="fas fa-hands-helping"></i>
+      <span>Daily Helper</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="text-counter.html">Text Tools</a>
+      <a href="currency.html">Finance</a>
+      <a href="notes.html">Notes</a>
+    </div>
+    
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      Back to Home
+    </a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="tool-container">
+      <h1><i class="fas fa-text-width"></i> Text Counter</h1>
+      <p class="subtitle">Count words, characters, sentences and more in your text</p>
+      
+      <div class="text-counter-box">
+        <div class="counter-controls">
+          <button class="btn active" data-count="all">
+            <i class="fas fa-font"></i> All Characters
+          </button>
+          <button class="btn" data-count="no-spaces">
+            <i class="fas fa-minus"></i> No Spaces
+          </button>
+          <button class="btn" data-count="words">
+            <i class="fas fa-align-left"></i> Words
+          </button>
+          <button class="btn" data-count="sentences">
+            <i class="fas fa-terminal"></i> Sentences
+          </button>
+          <button class="btn" data-count="paragraphs">
+            <i class="fas fa-paragraph"></i> Paragraphs
+          </button>
+        </div>
+        
+        <textarea id="text-input" placeholder="Type or paste your text here..." autofocus></textarea>
+        
+        <div class="counter-results">
+          <div class="result-box">
+            <span class="result-label"><i class="fas fa-font"></i> Characters</span>
+            <span class="result-value" id="char-count">0</span>
+          </div>
+          <div class="result-box">
+            <span class="result-label"><i class="fas fa-minus"></i> No Spaces</span>
+            <span class="result-value" id="char-no-spaces">0</span>
+          </div>
+          <div class="result-box">
+            <span class="result-label"><i class="fas fa-align-left"></i> Words</span>
+            <span class="result-value" id="word-count">0</span>
+          </div>
+          <div class="result-box">
+            <span class="result-label"><i class="fas fa-terminal"></i> Sentences</span>
+            <span class="result-value" id="sentence-count">0</span>
+          </div>
+          <div class="result-box">
+            <span class="result-label"><i class="fas fa-paragraph"></i> Paragraphs</span>
+            <span class="result-value" id="paragraph-count">0</span>
+          </div>
+        </div>
+        
+        <div class="text-actions">
+          <button class="btn btn-primary" id="copy-btn">
+            <i class="fas fa-copy"></i> Copy Text
+          </button>
+          <button class="btn btn-secondary" id="clear-btn">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+          <a href="index.html" class="btn" style="background: #2ecc71; color: white;">
+            <i class="fas fa-home"></i> Return Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const textInput = document.getElementById('text-input');
+      const charCount = document.getElementById('char-count');
+      const charNoSpaces = document.getElementById('char-no-spaces');
+      const wordCount = document.getElementById('word-count');
+      const sentenceCount = document.getElementById('sentence-count');
+      const paragraphCount = document.getElementById('paragraph-count');
+      const copyBtn = document.getElementById('copy-btn');
+      const clearBtn = document.getElementById('clear-btn');
+      const countButtons = document.querySelectorAll('.counter-controls .btn');
+      
+      // Initial active button
+      let activeCountType = 'all';
+      
+      // Event Listeners
+      textInput.addEventListener('input', updateCounts);
+      copyBtn.addEventListener('click', copyText);
+      clearBtn.addEventListener('click', clearText);
+      
+      // Add click event to all count type buttons
+      countButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons
+          countButtons.forEach(btn => btn.classList.remove('active'));
+          // Add active class to clicked button
+          this.classList.add('active');
+          // Update active count type
+          activeCountType = this.getAttribute('data-count');
+          // Highlight the relevant result
+          highlightResult(activeCountType);
+        });
+      });
+      
+      // Update all counts
+      function updateCounts() {
+        const text = textInput.value;
+        
+        // Character count (including spaces)
+        charCount.textContent = text.length;
+        
+        // Character count (excluding spaces)
+        charNoSpaces.textContent = text.replace(/\s/g, '').length;
+        
+        // Word count
+        const words = text.trim() === '' ? [] : text.trim().split(/\s+/);
+        wordCount.textContent = words.length;
+        
+        // Sentence count (naive implementation)
+        const sentences = text.trim() === '' ? 0 : text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+        sentenceCount.textContent = sentences;
+        
+        // Paragraph count
+        const paragraphs = text.trim() === '' ? 0 : text.split(/\n+/).filter(p => p.trim().length > 0).length;
+        paragraphCount.textContent = paragraphs;
+        
+        // Highlight the active result
+        highlightResult(activeCountType);
+      }
+      
+      // Highlight the active result
+      function highlightResult(type) {
+        // Remove highlight from all results
+        document.querySelectorAll('.result-box').forEach(box => {
+          box.style.background = '#f8f9fa';
+          box.style.boxShadow = 'none';
+        });
+        
+        // Add highlight to active result
+        let activeBox;
+        switch(type) {
+          case 'all':
+            activeBox = document.getElementById('char-count').parentElement;
+            break;
+          case 'no-spaces':
+            activeBox = document.getElementById('char-no-spaces').parentElement;
+            break;
+          case 'words':
+            activeBox = document.getElementById('word-count').parentElement;
+            break;
+          case 'sentences':
+            activeBox = document.getElementById('sentence-count').parentElement;
+            break;
+          case 'paragraphs':
+            activeBox = document.getElementById('paragraph-count').parentElement;
+            break;
+        }
+        
+        if (activeBox) {
+          activeBox.style.background = '#e3f2fd';
+          activeBox.style.boxShadow = '0 0 0 2px rgba(52, 152, 219, 0.2)';
+        }
+      }
+      
+      // Copy text to clipboard
+      function copyText() {
+        textInput.select();
+        document.execCommand('copy');
+        
+        // Change button text temporarily
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      }
+      
+      // Clear text
+      function clearText() {
+        textInput.value = '';
+        updateCounts();
+        textInput.focus();
+      }
+      
+      // Initialize
+      updateCounts();
+      highlightResult(activeCountType);
+    });
+  </script>
+</body>
+</html>

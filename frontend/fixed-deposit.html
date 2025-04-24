@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixed Deposit Calculator | Daily Helper</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="logo-container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>DailyHelper</span>
+      </a>
+      <div class="sidebar-toggle">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+    </div>
+    
+    <div class="nav-scroll-container">
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link">
+            <div class="nav-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        
+        <li class="nav-item has-submenu">
+          <a href="#" class="nav-link active">
+            <div class="nav-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <span class="nav-text">Finance Tools</span>
+            <i class="fas fa-chevron-down submenu-toggle"></i>
+          </a>
+          <ul class="sub-menu">
+            <li class="sub-item">
+              <a href="currency.html" class="sub-link">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Currency Converter</span>
+              </a>
+            </li>
+            <li class="sub-item">
+              <a href="fixed-deposit.html" class="sub-link active">
+                <i class="fas fa-piggy-bank"></i>
+                <span>Fixed Deposit</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+        <li class="nav-item">
+          <a href="currency.html" class="nav-link">
+            <div class="nav-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+            <span class="nav-text">currency</span>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="text-counter.html" class="nav-link">
+            <div class="nav-icon">
+              <i class="fas fa-text-width"></i>
+            </div>
+            <span class="nav-text">Text Counter</span>
+          </a>
+        </li>
+        
+        
+      </ul>
+      
+      
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="left-section">
+        <div class="breadcrumb">
+          <a href="index.html">Dashboard</a>
+          <span>/</span>
+          <a href="fixed-deposit.html">Finance Tools</a>
+          <span>/</span>
+          <span>Fixed Deposit Calculator</span>
+        </div>
+      </div>
+      
+      <div class="right-section">
+        <div class="theme-switch">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-switcher">
+            <span class="slider round"></span>
+            <span class="theme-icon dark"><i class="fas fa-moon"></i></span>
+            <span class="theme-icon light"><i class="fas fa-sun"></i></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="fd-calculator-container">
+        <div class="calculator-card">
+          <div class="calculator-header">
+            <div class="header-icon">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <div class="header-text">
+              <h2>Fixed Deposit Calculator</h2>
+              <p>Calculate your investment returns with precision</p>
+            </div>
+          </div>
+          
+          <div class="calculator-body">
+            <div class="form-grid">
+              <!-- Principal Amount -->
+              <div class="form-group">
+                <label for="principal" class="form-label">
+                  <i class="fas fa-money-bill-wave"></i> Principal Amount
+                </label>
+                <div class="input-with-suffix">
+                  <input type="number" id="principal" placeholder="10,000" min="0" step="1000" required>
+                  <span class="input-suffix">LKR</span>
+                </div>
+              </div>
+              
+              <!-- Interest Rate -->
+              <div class="form-group">
+                <label for="rate" class="form-label">
+                  <i class="fas fa-percentage"></i> Interest Rate
+                </label>
+                <div class="input-with-suffix">
+                  <input type="number" id="rate" placeholder="8.5" min="0" max="50" step="0.01" required>
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+              
+              <!-- Time Period -->
+              <div class="form-group">
+                <label for="time" class="form-label">
+                  <i class="fas fa-clock"></i> Time Period
+                </label>
+                <div class="input-with-suffix">
+                  <input type="number" id="time" placeholder="5" min="0.1" max="50" step="0.1" required>
+                  <span class="input-suffix">Years</span>
+                </div>
+              </div>
+              
+              <!-- Compounding Frequency -->
+              <div class="form-group">
+                <label for="frequency" class="form-label">
+                  <i class="fas fa-calendar-alt"></i> Compounding
+                </label>
+                <select id="frequency" class="styled-select">
+                  <option value="1">Yearly</option>
+                  <option value="2">Half-Yearly</option>
+                  <option value="4">Quarterly</option>
+                  <option value="12" selected>Monthly</option>
+                </select>
+              </div>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateFD()">
+              <i class="fas fa-calculator"></i> Calculate Returns
+            </button>
+          </div>
+          
+          <div class="calculator-results">
+            <div class="result-card">
+              <div class="result-icon">
+                <i class="fas fa-coins"></i>
+              </div>
+              <div class="result-details">
+                <span class="result-label">Maturity Amount</span>
+                <span class="result-value" id="maturity-amount">LKR 0.00</span>
+              </div>
+            </div>
+            
+            <div class="result-card">
+              <div class="result-icon">
+                <i class="fas fa-hand-holding-usd"></i>
+              </div>
+              <div class="result-details">
+                <span class="result-label">Total Interest</span>
+                <span class="result-value" id="total-interest">LKR 0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div>
+    </div>
+  </main>
+
+  <script>
+     function calculateFD() {
+    // Get input values
+    const principal = parseFloat(document.getElementById('principal').value);
+    const rate = parseFloat(document.getElementById('rate').value);
+    const time = parseFloat(document.getElementById('time').value);
+    const freq = parseInt(document.getElementById('frequency').value);
+
+    // Validate inputs
+    if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
+      showError('Please enter valid numbers in all fields');
+      return;
+    }
+
+    if (principal <= 0 || rate <= 0 || time <= 0) {
+      showError('Values must be greater than zero');
+      return;
+    }
+
+    // Calculate compound interest
+    const maturity = principal * Math.pow(1 + (rate / (100 * freq)), (freq * time));
+    const interest = maturity - principal;
+
+    // Format currency
+    const formatter = new Intl.NumberFormat('en-LK', {
+      style: 'currency',
+      currency: 'LKR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    // Display results
+    document.getElementById('maturity-amount').textContent = formatter.format(maturity);
+    document.getElementById('total-interest').textContent = formatter.format(interest);
+  }
+
+  function resetCalculator() {
+    document.getElementById('principal').value = '';
+    document.getElementById('rate').value = '';
+    document.getElementById('time').value = '';
+    document.getElementById('frequency').value = '1';
+    document.getElementById('maturity-amount').textContent = 'LKR 0.00';
+    document.getElementById('total-interest').textContent = 'LKR 0.00';
+  }
+
+  function showError(message) {
+    // You could replace this with a more elegant notification system
+    alert(message);
+  }
+  </script>
+</body>
+</html>
