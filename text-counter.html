@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Text Counter | Daily Helper</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <i class="fas fa-hands-helping"></i> <span>Daily Helper</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="text-counter.html">Text Tools</a>
+      <a href="currency.html">Finance</a>
+      <a href="notes.html">Notes</a>
+    </div>
+
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="tool-container">
+      <h1><i class="fas fa-text-width"></i> Text Counter</h1>
+      <p class="subtitle">Count words, characters, sentences, paragraphs easily</p>
+
+      <div class="text-counter-box">
+
+        <!-- Counter Buttons -->
+        <div class="counter-controls">
+          <button class="btn active" data-count="all"><i class="fas fa-font"></i> All Characters</button>
+          <button class="btn" data-count="no-spaces"><i class="fas fa-minus"></i> No Spaces</button>
+          <button class="btn" data-count="words"><i class="fas fa-align-left"></i> Words</button>
+          <button class="btn" data-count="sentences"><i class="fas fa-terminal"></i> Sentences</button>
+          <button class="btn" data-count="paragraphs"><i class="fas fa-paragraph"></i> Paragraphs</button>
+        </div>
+
+        <!-- Text Input -->
+        <textarea id="text-input" placeholder="Type or paste your text here..." autofocus></textarea>
+
+        <!-- Result Box -->
+        <div class="counter-results">
+          <div class="result-box"><span class="result-label"><i class="fas fa-font"></i> Characters:</span><span id="char-count">0</span></div>
+          <div class="result-box"><span class="result-label"><i class="fas fa-minus"></i> No Spaces:</span><span id="char-no-spaces">0</span></div>
+          <div class="result-box"><span class="result-label"><i class="fas fa-align-left"></i> Words:</span><span id="word-count">0</span></div>
+          <div class="result-box"><span class="result-label"><i class="fas fa-terminal"></i> Sentences:</span><span id="sentence-count">0</span></div>
+          <div class="result-box"><span class="result-label"><i class="fas fa-paragraph"></i> Paragraphs:</span><span id="paragraph-count">0</span></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-actions">
+          <button class="btn btn-primary" id="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+          <button class="btn btn-success" id="save-btn"><i class="fas fa-save"></i> Save Text</button>
+          <button class="btn btn-secondary" id="clear-btn"><i class="fas fa-trash"></i> Clear</button>
+          <a href="index.html" class="btn btn-success"><i class="fas fa-home"></i> Home</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const textInput = document.getElementById('text-input');
+      const charCount = document.getElementById('char-count');
+      const charNoSpaces = document.getElementById('char-no-spaces');
+      const wordCount = document.getElementById('word-count');
+      const sentenceCount = document.getElementById('sentence-count');
+      const paragraphCount = document.getElementById('paragraph-count');
+      const copyBtn = document.getElementById('copy-btn');
+      const clearBtn = document.getElementById('clear-btn');
+      const saveBtn = document.getElementById('save-btn');
+      const countButtons = document.querySelectorAll('.counter-controls .btn');
+
+      let activeCountType = 'all';
+
+      // Update counts function
+      const updateCounts = () => {
+        const text = textInput.value;
+
+        charCount.textContent = text.length;
+        charNoSpaces.textContent = text.replace(/\s/g, '').length;
+        wordCount.textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+        sentenceCount.textContent = text.trim() ? text.split(/[.!?]+/).filter(s => s.trim()).length : 0;
+        paragraphCount.textContent = text.trim() ? text.split(/\n+/).filter(p => p.trim()).length : 0;
+
+        highlightResult(activeCountType);
+      };
+
+      // Highlight active result
+      const highlightResult = (type) => {
+        document.querySelectorAll('.result-box').forEach(box => {
+          box.classList.remove('highlight');
+        });
+
+        switch(type) {
+          case 'all':
+            document.getElementById('char-count').parentElement.classList.add('highlight');
+            break;
+          case 'no-spaces':
+            document.getElementById('char-no-spaces').parentElement.classList.add('highlight');
+            break;
+          case 'words':
+            document.getElementById('word-count').parentElement.classList.add('highlight');
+            break;
+          case 'sentences':
+            document.getElementById('sentence-count').parentElement.classList.add('highlight');
+            break;
+          case 'paragraphs':
+            document.getElementById('paragraph-count').parentElement.classList.add('highlight');
+            break;
+        }
+      };
+
+      // Copy text
+      const copyText = () => {
+        navigator.clipboard.writeText(textInput.value).then(() => {
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+          }, 2000);
+        });
+      };
+
+      // Clear text
+      const clearText = () => {
+        textInput.value = '';
+        updateCounts();
+        textInput.focus();
+      };
+
+      // Save text
+      const saveText = () => {
+        const text = textInput.value;
+        if (!text.trim()) {
+          alert('Text area is empty!');
+          return;
+        }
+        const blob = new Blob([text], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'text.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+        setTimeout(() => {
+          saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Text';
+        }, 2000);
+      };
+
+      // Event listeners
+      textInput.addEventListener('input', updateCounts);
+      copyBtn.addEventListener('click', copyText);
+      clearBtn.addEventListener('click', clearText);
+      saveBtn.addEventListener('click', saveText);
+
+      countButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          countButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          activeCountType = this.getAttribute('data-count');
+          highlightResult(activeCountType);
+        });
+      });
+
+      // Initial state
+      updateCounts();
+      highlightResult(activeCountType);
+    });
+  </script>
+
+</body>
+</html>
